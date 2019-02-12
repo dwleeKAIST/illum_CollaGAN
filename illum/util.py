@@ -35,31 +35,3 @@ def tf_Y2R(YCC):
     return tf.transpose(tf.image.yuv_to_rgb(tf.transpose(YCC,[0,2,3,1])),[0,3,1,2])
 
 
-def myNumExt(s):
-    head = s.rstrip('0123456789')
-    tail = s[len(head):]
-    return int(tail)
-
-def ri2ssos(inp):
-    st()
-    sz   = inp.shape
-    nCh  = int(int(sz[3])/2)
-    if nCh == 1:
-        out  = tf.sqrt(tf.square(inp[:,:,:,0:nCh])+tf.square(inp[:,:,:,nCh:]))
-        return out
-    else:
-        st()
-
-def play(img, XY_dims=[2,3]):
-    if len(img.shape)==2:
-        img_z = np.abs(img)
-    else:
-        if XY_dims==[2,3]:
-            img_z = img[0,0,:,:]
-        elif XY_dims==[1,2]:
-            img_z = img[0,:,:]
-        else:
-            st()
-    plt.imshow(img_z)
-    plt.show()
-

@@ -16,9 +16,6 @@ class faceIllum:
         self.right = 0#3
         self.left = 0#3
         self.dtype = tf.float32
-        str_ = "/device:GPU:0"
-        with tf.device(str_):
-            self.model = Illum_net()
         self.latest_ckpt = tf.train.latest_checkpoint( self.ckpt_dir )
         
   
@@ -36,7 +33,10 @@ class faceIllum:
         Dy, stdD = self.my_y2r(D)
         Ey, stdE = self.my_y2r(E)
         std = (stdA+stdB+stdD+stdE)/4
-    
+        str_ = "/device:GPU:0"
+        with tf.device(str_):
+            self.model = Illum_net()
+   
         with tf.Session() as sess:
             msg = []
             if not self.latest_ckpt==None:
@@ -45,7 +45,7 @@ class faceIllum:
                 print(self.ckpt_dir)
                 msg = "There is no ckpt file for illumination compensation. Check the path again."
                 return msg, []
- 
+            
             feed_dict = {self.model.a_img_Y:Ay, self.model.b_img_Y:By, self.model.c_img_Y:Cy, self.model.d_img_Y:Dy, self.model.e_img_Y:Ey,
                     self.model.mask:mask, self.model.is_Training:True}
             illum_img_Y = sess.run( self.model.recon_contrast_Y, feed_dict=feed_dict)

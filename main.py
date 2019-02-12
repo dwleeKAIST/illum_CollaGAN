@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
+import sys
 import cherrypy
 import random
 import string
@@ -11,10 +11,13 @@ userpassdict  = db.get_users()
 get_ha1       = cherrypy.lib.auth_digest.get_ha1_dict(userpassdict)
 
 
+host = sys.argv[1]
+port = int(sys.argv[2])
+
 config = {
   'global' : {
-        'server.socket_host': '143.248.30.87',
-        'server.socket_port': 80,
+        'server.socket_host': host,
+        'server.socket_port': port,
 
         #'server.ssl_module':'pyopenssl',
         #'server.ssl_certificate':"/home/wbim/.ssl/server.crt",
@@ -50,6 +53,5 @@ class BISPL_API(object):
 
 
 if __name__ == '__main__':
-    #cherrypy.quickstart(Document(), '/api/document', config)
     cherrypy.quickstart(BISPL_API(), '/', config)
     

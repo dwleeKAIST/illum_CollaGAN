@@ -6,7 +6,6 @@ from illum.faceIllum import faceIllum
 import cv2
 from ipdb import set_trace as st
 import shutil, os, io
-#from SISR.faceSISR import faceSISR
 import time
 
 class FileLenIO(io.FileIO):
@@ -19,9 +18,15 @@ class FileLenIO(io.FileIO):
 class IllumCore:
     _store  = None
     exposed = True
-    
+   
+
     def __init__(self):
-        self.core = faceIllum(ckpt_dir='./current_net/illum/DBrenew2_onlyFace_Unet_ssim1_ngf64_Dorig_Notresid')
+        self.core = faceIllum(ckpt_dir='./current_net/illum/DBrenew2_onlyFace_Unet_ssim1_ngf64_Dorig_Notresid/ckpt_dir')
+        self.cnt = 0
+        self.A = 0
+        self.B = 0
+        self.C = 0
+        self.D = 0
         
     def GET(self):
         return "illum core module"
@@ -32,11 +37,10 @@ class IllumCore:
         img_byte = bytearray()
         img_byte.extend(img_data)
         
-        
         jpg_bytes = np.asarray(img_byte, dtype=np.uint8)
         img = cv2.imdecode(jpg_bytes, cv2.IMREAD_UNCHANGED)
         
-        sz = img.shape[1]
+        sz = int(img.shape[1]/4)
         A = img[:,:sz,:]
         B = img[:,sz:2*sz,:]
         D = img[:,2*sz:3*sz,:]
